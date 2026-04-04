@@ -36,12 +36,6 @@
   display: inline-block;
 }
 
-.hero-title .accent {
-  color: var(--accent);
-  position: relative;
-  display: inline-block;
-}
-
 .hero-title .accent::before,
 .hero-title .accent::after {
   content: attr(data-text);
@@ -53,70 +47,87 @@
 
 .hero-title .accent::before {
   color: #00c8ff;
-  animation: glitchBlue 7s infinite;
+  animation: glitchBlue 5s infinite;
 }
 
 .hero-title .accent::after {
   color: #ff4fd8;
-  animation: glitchPink 7s infinite;
+  animation: glitchPink 5s infinite;
 }
 
 @keyframes glitchBlue {
   0%, 92%, 100% {
     opacity: 0;
-    transform: translate(0, 0);
+    transform: translate(0,0);
     clip-path: inset(0 0 0 0);
   }
+
   93% {
     opacity: 0.35;
+    transform: translate(-3px, 0);
+    clip-path: inset(10% 0 60% 0);
+  }
+
+  94.5% {
+    opacity: 0.35;
     transform: translate(-2px, 0);
-    clip-path: inset(12% 0 55% 0);
+    clip-path: inset(20% 0 45% 0);
   }
-  94% {
-    opacity: 0.28;
+
+  96% {
+    opacity: 0.3;
     transform: translate(2px, 0);
-    clip-path: inset(55% 0 10% 0);
+    clip-path: inset(45% 0 20% 0);
   }
-  95% {
-    opacity: 0.18;
+
+  97.5% {
+    opacity: 0.25;
     transform: translate(-1px, 0);
     clip-path: inset(30% 0 35% 0);
   }
-  96% {
+
+  99% {
     opacity: 0;
-    transform: translate(0, 0);
-    clip-path: inset(0 0 0 0);
+    transform: translate(0,0);
   }
 }
 
 @keyframes glitchPink {
   0%, 92%, 100% {
     opacity: 0;
-    transform: translate(0, 0);
+    transform: translate(0,0);
     clip-path: inset(0 0 0 0);
   }
+
   93.2% {
-    opacity: 0.30;
+    opacity: 0.35;
+    transform: translate(3px, 0);
+    clip-path: inset(65% 0 8% 0);
+  }
+
+  94.7% {
+    opacity: 0.3;
     transform: translate(2px, 0);
-    clip-path: inset(60% 0 8% 0);
+    clip-path: inset(50% 0 18% 0);
   }
-  94.2% {
-    opacity: 0.22;
-    transform: translate(-2px, 0);
-    clip-path: inset(8% 0 62% 0);
-  }
-  95.2% {
-    opacity: 0.14;
-    transform: translate(1px, 0);
-    clip-path: inset(38% 0 28% 0);
-  }
+
   96.2% {
+    opacity: 0.25;
+    transform: translate(-2px, 0);
+    clip-path: inset(18% 0 55% 0);
+  }
+
+  97.7% {
+    opacity: 0.2;
+    transform: translate(1px, 0);
+    clip-path: inset(35% 0 30% 0);
+  }
+
+  99.2% {
     opacity: 0;
-    transform: translate(0, 0);
-    clip-path: inset(0 0 0 0);
+    transform: translate(0,0);
   }
 }
-
 .hero-tagline {
   font-family: var(--mono);
   font-size: 1rem;
