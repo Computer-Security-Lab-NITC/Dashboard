@@ -1,9 +1,13 @@
+import os
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = "ctf-secret-key-change-me"
-REGISTRATION_OPEN = True
 
 # In-memory store (replace with a DB for production)
 announcements = [
@@ -96,7 +100,8 @@ next_id = {"announcements": 4, "tools": 9}
 def index():
     return render_template(
         "index.html",
-        registration_open=REGISTRATION_OPEN
+        registration_open=os.getenv("REGISTRATION_OPEN", "false").lower() == "true",
+        google_form_url=os.getenv("GOOGLE_FORM_URL", "#")
     )
 
 @app.route("/announcement")

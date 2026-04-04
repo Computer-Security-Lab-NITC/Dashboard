@@ -516,7 +516,7 @@
 <div class="hero">
   <p class="hero-pre"><span>$</span> cat event_info.txt</p>
   <h1 class="hero-title">
-    <span class="accent" data-text="NullPointer">NullPointer</span> CTF 2025
+    <span class="accent" data-text="NullPointer">NullPointer</span> CTF 2026
   </h1>
   <p class="hero-tagline">// Break it. Trace it. Learn it.</p>
   <p class="hero-desc">
@@ -529,7 +529,7 @@
 
   <div class="hero-actions">
     {% if registration_open %}
-      <a class="hero-cta" href="YOUR_GOOGLE_FORM_LINK" target="_blank" rel="noopener">
+      <a class="hero-cta" href="{{ google_form_url }}" target="_blank" rel="noopener">
         Register Your Team →
       </a>
     {% else %}
@@ -721,7 +721,7 @@
   </div>
 
   {% if registration_open %}
-    <a class="btn btn-primary" href="YOUR_GOOGLE_FORM_LINK" target="_blank" rel="noopener">
+    <a class="btn btn-primary" href="{{ google_form_url }}" target="_blank" rel="noopener">
       REGISTER NOW →
     </a>
   {% else %}
