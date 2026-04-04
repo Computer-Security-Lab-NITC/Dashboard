@@ -1,0 +1,778 @@
+{% extends "base.html" %}
+{% block title %}Home — CTF Dashboard{% endblock %}
+
+{% block content %}
+<style>
+.hero {
+  padding: 4rem 0 3rem;
+  position: relative;
+}
+
+.hero-pre {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  animation: fadeUp 0.4s 0.05s ease both;
+}
+
+.hero-pre span { color: var(--accent); }
+
+.hero-title {
+  font-family: var(--sans);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  color: #e8f4ff;
+  margin-bottom: 0.9rem;
+  animation: fadeUp 0.45s 0.12s ease both;
+}
+
+.hero-title .accent {
+  color: var(--accent);
+  position: relative;
+  display: inline-block;
+}
+
+.hero-title .accent {
+  color: var(--accent);
+  position: relative;
+  display: inline-block;
+}
+
+.hero-title .accent::before,
+.hero-title .accent::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.hero-title .accent::before {
+  color: #00c8ff;
+  animation: glitchBlue 7s infinite;
+}
+
+.hero-title .accent::after {
+  color: #ff4fd8;
+  animation: glitchPink 7s infinite;
+}
+
+@keyframes glitchBlue {
+  0%, 92%, 100% {
+    opacity: 0;
+    transform: translate(0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  93% {
+    opacity: 0.35;
+    transform: translate(-2px, 0);
+    clip-path: inset(12% 0 55% 0);
+  }
+  94% {
+    opacity: 0.28;
+    transform: translate(2px, 0);
+    clip-path: inset(55% 0 10% 0);
+  }
+  95% {
+    opacity: 0.18;
+    transform: translate(-1px, 0);
+    clip-path: inset(30% 0 35% 0);
+  }
+  96% {
+    opacity: 0;
+    transform: translate(0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes glitchPink {
+  0%, 92%, 100% {
+    opacity: 0;
+    transform: translate(0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  93.2% {
+    opacity: 0.30;
+    transform: translate(2px, 0);
+    clip-path: inset(60% 0 8% 0);
+  }
+  94.2% {
+    opacity: 0.22;
+    transform: translate(-2px, 0);
+    clip-path: inset(8% 0 62% 0);
+  }
+  95.2% {
+    opacity: 0.14;
+    transform: translate(1px, 0);
+    clip-path: inset(38% 0 28% 0);
+  }
+  96.2% {
+    opacity: 0;
+    transform: translate(0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.hero-tagline {
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 1.6rem;
+  letter-spacing: 0.5px;
+  animation: fadeUp 0.45s 0.2s ease both;
+}
+
+.hero-desc {
+  font-family: var(--sans);
+  font-size: 1.08rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.75;
+  max-width: 720px;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.45s 0.28s ease both;
+}
+
+.hero-conducted {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.45s 0.34s ease both;
+}
+
+.hero-conducted span { color: var(--accent2); }
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  animation: fadeUp 0.45s 0.4s ease both;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 0.8rem 1.8rem;
+  border-radius: 3px;
+  border: 1px solid var(--accent);
+  transition: all 0.2s;
+}
+
+.hero-cta:hover {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: 0 0 20px rgba(0,255,136,0.2);
+}
+
+.hero-cta.secondary {
+  background: transparent;
+  color: var(--accent2);
+  border-color: var(--accent2);
+}
+
+.hero-cta.secondary:hover {
+  background: rgba(0,200,255,0.08);
+  color: var(--accent2);
+}
+
+.hero-cta.warn {
+  background: transparent;
+  color: var(--warn);
+  border-color: var(--warn);
+}
+
+.hero-cta.warn:hover {
+  background: rgba(255,204,0,0.08);
+  color: var(--warn);
+}
+
+.hero-closed {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  padding: 0.8rem 1.8rem;
+  border-radius: 3px;
+  background: rgba(255,68,85,0.06);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section-rule {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.4rem;
+}
+
+.section-label::before {
+  content: "// ";
+  color: var(--accent);
+}
+
+.dates-grid,
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.date-card,
+.info-card,
+.highlight-card,
+.instructions-preview,
+.quick-links {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.4rem 1.5rem;
+}
+
+.date-card {
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.date-card:hover { border-color: var(--accent); }
+
+.date-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.date-card.card-reg::before   { background: var(--warn); }
+.date-card.card-event::before { background: var(--accent); }
+.date-card.card-time::before  { background: var(--accent2); }
+
+.date-card-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+.date-card-value {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #e8f4ff;
+  margin-bottom: 0.3rem;
+}
+
+.date-card-sub {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.countdown-wrap {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.6rem 1.5rem 1.4rem;
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-wrap::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--warn);
+}
+
+.countdown-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.countdown {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cd-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.cd-num {
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--warn);
+  line-height: 1;
+  min-width: 2.2ch;
+  text-align: center;
+}
+
+.cd-num.expired { color: var(--muted); }
+
+.cd-unit {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cd-colon {
+  font-family: var(--mono);
+  font-size: 1.6rem;
+  color: var(--muted);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  animation: blink 1s step-end infinite;
+}
+
+.cd-expired-note {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+  display: none;
+  margin-top: 0.5rem;
+}
+
+.info-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: #e8f4ff;
+  margin-bottom: 0.4rem;
+}
+
+.info-body {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.info-body .hi {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.info-icon {
+  font-size: 1.25rem;
+  margin-bottom: 0.65rem;
+  display: block;
+}
+
+.quick-links {
+  border: 1px solid var(--accent2);
+  box-shadow: 0 0 24px rgba(0,200,255,0.05);
+}
+
+.quick-links-title {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+  color: var(--accent2);
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
+}
+
+.quick-links p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.quick-links-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.highlight-card {
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 28px rgba(0,255,136,0.05);
+}
+
+.highlight-title {
+  font-family: var(--mono);
+  color: var(--accent);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
+}
+
+.highlight-main {
+  font-family: var(--sans);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #e8f4ff;
+  margin-bottom: 0.7rem;
+}
+
+.highlight-sub {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.instructions-preview ol {
+  margin-left: 1.4rem;
+  margin-top: 0.8rem;
+}
+
+.instructions-preview li {
+  margin-bottom: 0.9rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.reg-banner {
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  box-shadow: 0 0 32px rgba(0,255,136,0.05);
+}
+
+.reg-banner.closed {
+  border-color: var(--danger);
+  box-shadow: 0 0 32px rgba(255,68,85,0.06);
+}
+
+.reg-banner-text h3 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #e8f4ff;
+  margin-bottom: 0.35rem;
+}
+
+.reg-banner-text p {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.reg-banner-text p .warn {
+  color: var(--warn);
+}
+
+.reg-banner-text p .danger {
+  color: var(--danger);
+}
+</style>
+
+<div class="hero">
+  <p class="hero-pre"><span>$</span> cat event_info.txt</p>
+  <h1 class="hero-title">
+    <span class="accent" data-text="NullPointer">NullPointer</span> CTF 2025
+  </h1>
+  <p class="hero-tagline">// Break it. Trace it. Learn it.</p>
+  <p class="hero-desc">
+    An open internet Capture The Flag competition designed for curious minds at every skill level.
+    Whether you are new to cybersecurity or already exploring CTFs, this event is built to help you learn,
+    solve, and compete. Challenges may cover web exploitation, reverse engineering, cryptography, forensics,
+    and binary exploitation.
+  </p>
+  <p class="hero-conducted">Conducted by <span>CSED — NITC</span></p>
+
+  <div class="hero-actions">
+    {% if registration_open %}
+      <a class="hero-cta" href="YOUR_GOOGLE_FORM_LINK" target="_blank" rel="noopener">
+        Register Your Team →
+      </a>
+    {% else %}
+      <span class="hero-closed">Registration Closed</span>
+    {% endif %}
+
+    <a class="hero-cta secondary" href="/tools">Go to Tools →</a>
+    <a class="hero-cta warn" href="/announcement">Check Updates →</a>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<p class="section-label">Important Dates</p>
+
+<div class="dates-grid">
+  <div class="date-card card-reg">
+    <div class="date-card-label">Registration Deadline</div>
+    <div class="date-card-value">10/04/2026</div>
+    <div class="date-card-sub">Closes at 11:59 PM<br>First come, first served — slots are limited.</div>
+  </div>
+
+  <div class="date-card card-event">
+    <div class="date-card-label">Competition Date</div>
+    <div class="date-card-value">16/04/2026</div>
+    <div class="date-card-sub">Single-day event<br>In-person at SSL labs</div>
+  </div>
+
+  <div class="date-card card-time">
+    <div class="date-card-label">Competition Timing</div>
+    <div class="date-card-value">6:00 PM – 10:00 PM</div>
+    <div class="date-card-sub">4-hour window<br>All challenges unlock at 6 PM sharp.</div>
+  </div>
+</div>
+
+{% if registration_open %}
+<div class="countdown-wrap" style="margin-top:1rem;">
+  <div class="countdown-label">Registration closes in</div>
+  <div class="countdown" id="countdown">
+    <div class="cd-block">
+      <span class="cd-num" id="cd-days">--</span>
+      <span class="cd-unit">days</span>
+    </div>
+    <span class="cd-colon">:</span>
+    <div class="cd-block">
+      <span class="cd-num" id="cd-hours">--</span>
+      <span class="cd-unit">hours</span>
+    </div>
+    <span class="cd-colon">:</span>
+    <div class="cd-block">
+      <span class="cd-num" id="cd-mins">--</span>
+      <span class="cd-unit">mins</span>
+    </div>
+    <span class="cd-colon">:</span>
+    <div class="cd-block">
+      <span class="cd-num" id="cd-secs">--</span>
+      <span class="cd-unit">secs</span>
+    </div>
+  </div>
+  <p class="cd-expired-note" id="cd-expired">// Registration has closed.</p>
+</div>
+{% else %}
+<div class="countdown-wrap" style="margin-top:1rem;">
+  <div class="countdown-label">Registration Status</div>
+  <p style="font-family: var(--mono); color: var(--danger); font-size: 1rem;">
+    // Registration is closed.
+  </p>
+</div>
+{% endif %}
+
+<hr class="section-rule">
+
+<p class="section-label">Important Before You Start</p>
+
+<div class="quick-links">
+  <div class="quick-links-title">Always check these pages</div>
+  <p>
+    Before the event and on the competition day, always check the
+    <strong style="color: var(--warn);">Updates</strong> page for the latest announcements,
+    and visit the <strong style="color: var(--accent2);">Tools</strong> page to learn and install the required tools.
+  </p>
+  <div class="quick-links-actions">
+    <a class="btn btn-primary" href="/tools">GO TO TOOLS</a>
+    <a class="btn" href="/announcement" style="border-color: var(--warn); color: var(--warn);">GO TO UPDATES</a>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<p class="section-label">Why Participate</p>
+
+<div class="info-grid">
+  <div class="info-card">
+    <div class="info-title">Open Internet CTF</div>
+    <div class="info-body">
+      This is an <span class="hi">open internet</span> event. Participants may search, read, learn,
+      and use online references during the competition.
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-title">Learn the Tools Beforehand</div>
+    <div class="info-body">
+      We provide a dedicated <a href="/tools" style="color: var(--accent2); text-decoration: none;">Tools page</a>
+      to help you prepare before the CTF. You are expected to install these on your systems.
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-title">Beginner Friendly</div>
+    <div class="info-body">
+      New to CTFs? No problem. This event is designed to be approachable while still being fun and competitive.
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<p class="section-label">Registration Info</p>
+
+<div class="info-grid">
+  <div class="info-card">
+    <div class="info-title">Team Size</div>
+    <div class="info-body">
+      Exactly <span class="hi">2 members</span> per team. Solo entries are not accepted.
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-title">Limited Slots</div>
+    <div class="info-body">
+      Registration is on a <span class="hi">first come, first served</span> basis. Once slots fill up, the form may close early.
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-title">Updates Matter</div>
+    <div class="info-body">
+      Participants should <span class="hi">always check the Updates page</span> for the latest notices, clarifications, and announcements.
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<p class="section-label">Prizes</p>
+
+<div class="highlight-card">
+  <div class="highlight-title">Winner Rewards</div>
+  <div class="highlight-main">Top 3 teams win surprise gifts</div>
+  <div class="highlight-sub">
+    Perform well, climb the scoreboard, and compete for exciting surprise gifts reserved for the top three winning teams.
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<p class="section-label">Instructions</p>
+
+<div class="instructions-preview">
+  <p style="font-family: var(--sans); line-height: 1.7; color: var(--text);">
+    Before the event, please make sure you complete the following:
+  </p>
+  <ol>
+    <li>Join the WhatsApp group using the link shared to the registered mobile number entered in the Google Form.</li>
+    <li>Go through the <a href="/tools" style="color: var(--accent2); text-decoration: none;">Tools page</a> and learn the tools. You are expected to install these on your systems beforehand.</li>
+    <li>Bring your own system for the CTF and make sure your laptop has a LAN port for connection.</li>
+    <li>Always check the <a href="/announcement" style="color: var(--warn); text-decoration: none;">Updates page</a> for the latest announcements.</li>
+  </ol>
+</div>
+
+<hr class="section-rule">
+
+<div class="reg-banner {% if not registration_open %}closed{% endif %}">
+  <div class="reg-banner-text">
+    {% if registration_open %}
+      <h3>Ready to compete?</h3>
+      <p>
+        Register as a 2-person team via the Google Form. &nbsp;|&nbsp;
+        <span class="warn">⚠ Slots are limited — register early.</span>
+      </p>
+    {% else %}
+      <h3>Registration Closed</h3>
+      <p>
+        <span class="danger">Registration is currently closed.</span>
+        Please continue checking the Updates page for announcements.
+      </p>
+    {% endif %}
+  </div>
+
+  {% if registration_open %}
+    <a class="btn btn-primary" href="YOUR_GOOGLE_FORM_LINK" target="_blank" rel="noopener">
+      REGISTER NOW →
+    </a>
+  {% else %}
+    <span class="btn" style="border-color: var(--danger); color: var(--danger); cursor: default;">
+      REGISTRATION CLOSED
+    </span>
+  {% endif %}
+</div>
+
+{% if registration_open %}
+<script>
+(function () {
+  var deadline = new Date(2026, 4, 10, 23, 59, 59);
+
+  var $d = document.getElementById('cd-days');
+  var $h = document.getElementById('cd-hours');
+  var $m = document.getElementById('cd-mins');
+  var $s = document.getElementById('cd-secs');
+  var $exp = document.getElementById('cd-expired');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    var diff = deadline - Date.now();
+
+    if (diff <= 0) {
+      [$d, $h, $m, $s].forEach(function(el) {
+        el.textContent = '00';
+        el.classList.add('expired');
+      });
+      $exp.style.display = 'block';
+      return;
+    }
+
+    var total = Math.floor(diff / 1000);
+    var s = total % 60;
+    var mn = Math.floor(total / 60) % 60;
+    var h = Math.floor(total / 3600) % 24;
+    var d = Math.floor(total / 86400);
+
+    $d.textContent = pad(d);
+    $h.textContent = pad(h);
+    $m.textContent = pad(mn);
+    $s.textContent = pad(s);
+
+    setTimeout(tick, 1000);
+  }
+
+  tick();
+})();
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block title %}Tools — CTF Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  /* ── CATEGORY FILTER ── */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    padding: 0.3rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover,
+  .filter-btn.active {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(0,200,255,0.07);
+  }
+
+  /* ── TOOL GRID ── */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .tool-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: border-color 0.2s, transform 0.2s;
+    animation: fadeUp 0.4s ease both;
+    position: relative;
+  }
+
+  .tool-card:hover {
+    border-color: var(--accent2);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tool-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .tool-name {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 1rem;
+    color: #e8f0f8;
+  }
+
+  .tool-cat {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+    background: rgba(0,200,255,0.08);
+    color: var(--accent2);
+    border: 1px solid rgba(0,200,255,0.2);
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+
+  .tool-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .tool-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+  }
+
+  .tool-link {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s;
+  }
+  .tool-link:hover { opacity: 0.7; }
+  .tool-link::before { content: "→ "; }
+
+  /* ── ADD TOOL FORM ── */
+  .post-form summary {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    letter-spacing: 1px;
+    padding: 0.5rem 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+  .post-form summary::before { content: "[+]"; color: var(--accent); }
+  .post-form[open] summary::before { content: "[-]"; }
+  .post-form summary:hover { color: var(--accent); }
+  .post-form .form-inner { margin-top: 1rem; }
+
+  /* ── EMPTY ── */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+  .empty-state p { font-size: 0.85rem; }
+</style>
+
+<div class="page-header">
+  <h1>TOOLS</h1>
+  <p>Recommended resources &amp; utilities</p>
+</div>
+
+
+<!-- Category filters -->
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-cat="all" onclick="filterTools('all', this)">ALL</button>
+  {% for cat in categories %}
+  <button class="filter-btn" data-cat="{{ cat }}" onclick="filterTools('{{ cat }}', this)">{{ cat | upper }}</button>
+  {% endfor %}
+</div>
+
+<!-- Tools grid -->
+<div class="tool-grid" id="toolGrid">
+  {% if tools %}
+    {% for tool in tools %}
+    <div class="tool-card" data-cat="{{ tool.category }}" style="animation-delay: {{ loop.index0 * 0.05 }}s;">
+      <div class="tool-header">
+        <span class="tool-name">{{ tool.name }}</span>
+        <span class="tool-cat">{{ tool.category }}</span>
+      </div>
+      {% if tool.description %}
+      <p class="tool-desc">{{ tool.description }}</p>
+      {% endif %}
+      <div class="tool-footer">
+        <a class="tool-link" href="{{ tool.url }}" target="_blank" rel="noopener">{{ tool.url | truncate(40, true, '...') }}</a>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <div class="icon">🔧</div>
+      <p>No tools yet.</p>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  function filterTools(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tool-card').forEach(card => {
+      card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+</script>
+{% endblock %}

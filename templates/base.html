@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}CTF Dashboard{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0a0c0f;
+      --panel:     #0f1318;
+      --border:    #1e2730;
+      --accent:    #00ff88;
+      --accent2:   #00c8ff;
+      --warn:      #ffcc00;
+      --danger:    #ff4455;
+      --hint:      #b388ff;
+      --text:      #c8d8e8;
+      --muted:     #4a6070;
+      --mono:      'Share Tech Mono', monospace;
+      --sans:      'Rajdhani', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 18px;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 80% 40% at 50% -10%, rgba(0,255,136,0.05) 0%, transparent 70%),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(30,39,48,0.4) 39px, rgba(30,39,48,0.4) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(30,39,48,0.2) 39px, rgba(30,39,48,0.2) 40px);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,12,15,0.95);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 1.2rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .nav-brand::before {
+      content: ">";
+      color: var(--muted);
+      animation: blink 1.2s step-end infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .nav-links { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(0,255,136,0.05);
+    }
+
+    .wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .page-header {
+      margin-bottom: 2.5rem;
+      border-left: 3px solid var(--accent);
+      padding-left: 1rem;
+    }
+
+    .page-header h1 {
+      font-family: var(--mono);
+      font-size: 1.8rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    .page-header p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-top: 0.3rem;
+      font-family: var(--mono);
+    }
+
+    .flash {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      padding: 0.6rem 1rem;
+      border-radius: 3px;
+      margin-bottom: 1.5rem;
+      background: rgba(0,255,136,0.08);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: flex-end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+      min-width: 160px;
+    }
+
+    label {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    input, textarea, select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      padding: 0.55rem 0.8rem;
+      border-radius: 3px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+    }
+
+    textarea { resize: vertical; min-height: 70px; }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      padding: 0.55rem 1.2rem;
+      border: 1px solid;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn-danger {
+      color: var(--danger);
+      border-color: var(--danger);
+      padding: 0.3rem 0.7rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="/">CTF_DASHBOARD</a>
+  <div class="nav-links">
+    <a href="/" class="{{ 'active' if request.endpoint == 'index' else '' }}">HOME</a>
+    <a href="/announcement" class="{{ 'active' if request.endpoint == 'announcement_page' else '' }}">UPDATES</a>
+    <a href="/tools" class="{{ 'active' if request.endpoint == 'tools_page' else '' }}">TOOLS</a>
+  </div>
+</nav>
+
+<div class="wrapper">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="flash">// {{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
