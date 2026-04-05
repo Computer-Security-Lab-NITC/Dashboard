@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "ctf-secret-key-change-me"
+app.secret_key = os.getenv("SECRET_KEY", "defaultsecret")  # Replace with a secure random key in production
 
 # In-memory store (replace with a DB for production)
 announcements = [

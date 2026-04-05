@@ -1,6 +1,7 @@
 # To run
 - Set the .env file with the parameters:
     ```
+    SECRET_KEY=ctf-secret-key
     REGISTRATION_OPEN=true # If set to false, the registration is closed despite the deadline
     GOOGLE_FORM_URL=https://forms.gle/your_actual_form_link
     ```
