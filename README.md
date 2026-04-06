@@ -15,8 +15,16 @@
     ```
     pip install -r requirements.txt
     ```
-
-- Start the server
+## Development
+- Start the server 
     ```
     python app.py
     ```
+- App will be available at http://localhost:4000
+
+## Production
+- Start the server where PORT is an env variable from the WSGI application like render.
+    ```
+    gunicorn app:app --bind 0.0.0.0:$PORT
+    ```
+    Render runs your app inside a container and assigns a dynamic port. Gunicorn must bind to this port.
