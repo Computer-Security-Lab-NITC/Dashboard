@@ -236,6 +236,24 @@
       background: var(--danger);
       color: #fff;
     }
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 1rem 1.5rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      background: rgba(10,12,15,0.95);
+    }
+
+    .footer span {
+      color: var(--text);
+    }
   </style>
 </head>
 <body>
@@ -261,6 +279,11 @@
 
   {% block content %}{% endblock %}
 </div>
+
+<footer class="footer">
+  <span>Copyright Ⓒ 2026 CSED, National Institute of Technology Calicut</span>
+</footer>
+
 <script>
   function toggleNav() {
     document.getElementById("navLinks").classList.toggle("show");

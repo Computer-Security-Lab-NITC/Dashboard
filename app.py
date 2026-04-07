@@ -11,16 +11,44 @@ app.secret_key = os.getenv("SECRET_KEY", "defaultsecret")  # Replace with a secu
 
 # In-memory store (replace with a DB for production)
 announcements = [
-    {
-        "id": 1,
-        "title": "Registration is now LIVE!",
-        "body": "Welcome to Nullpointer! Registration is now open. Please sign up using the Google Form linked on the homepage. We can't wait to see you compete!",
-        "tag": "info",
-        "timestamp": "2026-04-07 09:00"
-    },
+    # {
+    #     "id": 1,
+    #     "title": "Registration is now LIVE!",
+    #     "body": "Welcome to Nullpointer! Registration is now open. Please sign up using the Google Form linked on the homepage. We can't wait to see you compete!",
+    #     "tag": "info",
+    #     "timestamp": "08-04-2026 09:00"
+    # },
 ]
 
 tools = [
+    {
+        "id": 1,
+        "name": "Ghidra",
+        "url": "https://ghidra-sre.org/",
+        "description": "NSA's open-source reverse engineering framework with a powerful decompiler.",
+        "category": "Reverse Engineering"
+    },
+    {
+        "id": 2,
+        "name": "Wireshark",
+        "url": "https://www.wireshark.org/",
+        "description": "Network protocol analyzer for capturing and inspecting packets.",
+        "category": "Forensics"
+    },
+    {
+        "id": 3,
+        "name": "ZAP Proxy",
+        "url": "https://www.zaproxy.org/",
+        "description": "OWASP's Zed Attack Proxy for finding vulnerabilities in web applications.",
+        "category": "Web"
+    },
+    {
+        "id": 4,
+        "name": "exploitdb",
+        "url": "https://www.exploit-db.com/",
+        "description": "Comprehensive archive of public exploits and vulnerable software.",
+        "category": "Exploitation"
+    },
     # {
     #     "id": 1,
     #     "name": "CyberChef",
@@ -43,25 +71,11 @@ tools = [
     #     "category": "Web"
     # },
     # {
-    #     "id": 4,
-    #     "name": "Ghidra",
-    #     "url": "https://ghidra-sre.org/",
-    #     "description": "NSA's open-source reverse engineering framework with a powerful decompiler.",
-    #     "category": "Reverse Engineering"
-    # },
-    # {
     #     "id": 5,
     #     "name": "pwntools",
     #     "url": "https://github.com/Gallopsled/pwntools",
     #     "description": "CTF framework and exploit development library for Python.",
     #     "category": "Pwn"
-    # },
-    # {
-    #     "id": 6,
-    #     "name": "Wireshark",
-    #     "url": "https://www.wireshark.org/",
-    #     "description": "Network protocol analyzer for capturing and inspecting packets.",
-    #     "category": "Forensics"
     # },
     # {
     #     "id": 7,
@@ -79,7 +93,7 @@ tools = [
     # }
 ]
 
-next_id = {"announcements": 2, "tools": 1}
+next_id = {"announcements": 2, "tools": 7}
 
 
 @app.route("/")
