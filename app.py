@@ -121,7 +121,7 @@ def add_announcement():
     body = request.form.get("body", "").strip()
     tag = request.form.get("tag", "info")
     password = request.form.get("password", "")
-    if password != "student2026":
+    if password != os.getenv("PASSWORD"):
         flash("Unauthorized: Incorrect password.", "danger")
         return redirect(url_for("index"))
     if title and body:
