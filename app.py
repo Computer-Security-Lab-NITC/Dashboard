@@ -11,13 +11,13 @@ app.secret_key = os.getenv("SECRET_KEY", "defaultsecret")  # Replace with a secu
 
 # In-memory store (replace with a DB for production)
 announcements = [
-    # {
-    #     "id": 1,
-    #     "title": "Registration is now LIVE!",
-    #     "body": "Welcome to Nullpointer! Registration is now open. Please sign up using the Google Form linked on the homepage. We can't wait to see you compete!",
-    #     "tag": "info",
-    #     "timestamp": "08-04-2026 09:00"
-    # },
+    {
+        "id": 1,
+        "title": "Registration is now LIVE!",
+        "body": "Welcome to Nullpointer! Registration is now open. Please sign up using the Google Form linked on the homepage. We can't wait to see you compete!",
+        "tag": "info",
+        "timestamp": "08-04-2026 09:00"
+    },
 ]
 
 tools = [
@@ -93,7 +93,7 @@ tools = [
     # }
 ]
 
-next_id = {"announcements": 2, "tools": 7}
+next_id = {"announcements": 2, "tools": 5}
 
 
 @app.route("/")
