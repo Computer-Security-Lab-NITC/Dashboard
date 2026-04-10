@@ -18,6 +18,13 @@ announcements = [
         "tag": "info",
         "timestamp": "08-04-2026 09:00"
     },
+    {
+        "id": 2,
+        "title": "Registration is closed!",
+        "body": "Due to slots being full, we have decided to close the registration form earlier than the deadline. Thank you for your interest.",
+        "tag": "info",
+        "timestamp": "10-04-2026 12:00"
+    }
 ]
 
 tools = [
