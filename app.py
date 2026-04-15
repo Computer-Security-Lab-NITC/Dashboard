@@ -24,13 +24,6 @@ announcements = [
         "body": "Due to slots being full, we have decided to close the registration form earlier than the deadline. Thank you for your interest.",
         "tag": "info",
         "timestamp": "10-04-2026 12:00"
-    },
-    {
-        "id": 3,
-        "title": "Final tool list released!",
-        "body": "The final list of tools for the CTF has been released. Check out the tools page for details on what will be available during the competition.",
-        "tag": "info",
-        "timestamp": "15-04-2026 23:00"
     }
 ]
 
