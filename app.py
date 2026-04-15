@@ -24,6 +24,13 @@ announcements = [
         "body": "Due to slots being full, we have decided to close the registration form earlier than the deadline. Thank you for your interest.",
         "tag": "info",
         "timestamp": "10-04-2026 12:00"
+    },
+    {
+        "id": 3,
+        "title": "Final tool list released!",
+        "body": "The final list of tools for the CTF has been released. Check out the tools page for details on what will be available during the competition.",
+        "tag": "info",
+        "timestamp": "15-04-2026 23:00"
     }
 ]
 
@@ -50,12 +57,12 @@ tools = [
         "category": "Web"
     },
     {
-        "id": 4,
-        "name": "exploitdb",
-        "url": "https://www.exploit-db.com/",
-        "description": "Comprehensive archive of public exploits and vulnerable software.",
-        "category": "Exploitation"
-    },
+        "id": 5,
+        "name": "steghide",
+        "url": "https://steghide.sourceforge.net/",
+        "description": "Tool for hiding and extracting data inside images and audio files using steganography.",
+        "category": "Forensics"
+    }
     # {
     #     "id": 1,
     #     "name": "CyberChef",
@@ -100,8 +107,6 @@ tools = [
     # }
 ]
 
-next_id = {"announcements": 2, "tools": 5}
-
 
 @app.route("/")
 def index():
@@ -120,63 +125,6 @@ def announcement_page():
 def tools_page():
     categories = sorted(set(t["category"] for t in tools))
     return render_template("tools.html", tools=tools, categories=categories)
-
-
-@app.route("/admin/announcement/add", methods=["POST"])
-def add_announcement():
-    title = request.form.get("title", "").strip()
-    body = request.form.get("body", "").strip()
-    tag = request.form.get("tag", "info")
-    password = request.form.get("password", "")
-    if password != os.getenv("PASSWORD"):
-        flash("Unauthorized: Incorrect password.", "danger")
-        return redirect(url_for("index"))
-    if title and body:
-        announcements.append({
-            "id": next_id["announcements"],
-            "title": title,
-            "body": body,
-            "tag": tag,
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M")
-        })
-        next_id["announcements"] += 1
-        flash("Announcement posted.", "success")
-    return redirect(url_for("index"))
-
-
-# @app.route("/admin/announcement/delete/<int:ann_id>", methods=["POST"])
-# def delete_announcement(ann_id):
-#     global announcements
-#     announcements = [a for a in announcements if a["id"] != ann_id]
-#     flash("Announcement removed.", "success")
-#     return redirect(url_for("index"))
-
-
-# @app.route("/admin/tool/add", methods=["POST"])
-# def add_tool():
-#     name = request.form.get("name", "").strip()
-#     url = request.form.get("url", "").strip()
-#     description = request.form.get("description", "").strip()
-#     category = request.form.get("category", "Misc").strip()
-#     if name and url:
-#         tools.append({
-#             "id": next_id["tools"],
-#             "name": name,
-#             "url": url,
-#             "description": description,
-#             "category": category
-#         })
-#         next_id["tools"] += 1
-#         flash("Tool added.", "success")
-#     return redirect(url_for("tools_page"))
-
-
-# @app.route("/admin/tool/delete/<int:tool_id>", methods=["POST"])
-# def delete_tool(tool_id):
-#     global tools
-#     tools = [t for t in tools if t["id"] != tool_id]
-#     flash("Tool removed.", "success")
-#     return redirect(url_for("tools_page"))
 
 
 if __name__ == "__main__":
