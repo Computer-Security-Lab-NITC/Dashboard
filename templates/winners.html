@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% block title %}Winners — CTF Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  .fallback-banner {
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.2);
+    color: var(--accent);
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    font-family: var(--mono);
+    letter-spacing: 0.5px;
+  }
+
+  .winners-overview {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.4rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .stat-panel.accent {
+    border-color: rgba(0,255,136,0.18);
+    background: rgba(0,255,136,0.05);
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: rgba(0,255,136,0.08);
+    color: var(--accent);
+    border: 1px solid rgba(0,255,136,0.16);
+  }
+
+  .stat-value {
+    font-family: var(--sans);
+    font-size: 2rem;
+    font-weight: 700;
+    color: #eef8ff;
+  }
+
+  .stat-label {
+    font-family: var(--mono);
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--accent2);
+    letter-spacing: 1.5px;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  .podium-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .winner-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.4rem;
+    display: grid;
+    gap: 0.65rem;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .winner-card.rank-1 { border-color: rgba(0,255,136,0.35); }
+  .winner-card.rank-2 { border-color: rgba(0,200,255,0.28); }
+  .winner-card.rank-3 { border-color: rgba(179,136,255,0.28); }
+
+  .winner-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .winner-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .winner-rank {
+    font-family: var(--mono);
+    color: var(--muted);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+  }
+
+  .winner-name {
+    font-family: var(--sans);
+    font-size: 1.15rem;
+    margin: 0;
+    color: #e8f4ff;
+  }
+
+  .winner-place {
+    font-family: var(--mono);
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+
+  .progress-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+  }
+
+  .progress-heading {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-size: 0.78rem;
+  }
+
+  .level-chart {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .level-row {
+    display: grid;
+    grid-template-columns: 1.2fr minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .level-label {
+    font-family: var(--mono);
+    color: var(--text);
+    font-size: 0.9rem;
+  }
+
+  .level-bar-wrap {
+    background: rgba(255,255,255,0.05);
+    border-radius: 999px;
+    overflow: hidden;
+    height: 12px;
+  }
+
+  .level-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(0,255,136,0.5), rgba(0,200,255,0.9));
+  }
+
+  .level-count {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 0.9rem;
+    text-align: right;
+  }
+
+  .section-rule {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="page-header">
+  <h1>WINNERS</h1>
+  <p>Final standings &amp; level progression</p>
+</div>
+
+<section class="winners-overview" aria-label="Competition summary">
+  <div class="stat-panel">
+    <div class="stat-icon">#</div>
+    <div>
+      <div class="stat-value">{{ summary.total_teams }}</div>
+      <div class="stat-label">teams participated</div>
+    </div>
+  </div>
+
+  <div class="stat-panel accent">
+    <div class="stat-icon">★</div>
+    <div>
+      <div class="stat-value">{{ summary.level_progress|length }}</div>
+      <div class="stat-label">levels tracked</div>
+    </div>
+  </div>
+</section>
+
+<p class="section-label">Podium</p>
+<section class="podium-grid" aria-label="Top three teams">
+  {% for team in summary.winners %}
+  <article class="winner-card rank-{{ team.rank }}" style="animation-delay: {{ loop.index0 * 0.05 }}s;">
+    <div class="winner-photo" aria-hidden="true">
+      {% if team.photo_url %}
+        <img src="{{ team.photo_url }}" alt="{{ team.team_name }}" />
+      {% else %}
+        <span>{{ team.initials }}</span>
+      {% endif %}
+    </div>
+    <div class="winner-rank">#{{ team.rank }}</div>
+    <h2 class="winner-name">{{ team.team_name }}</h2>
+    <p class="winner-place">{{ ["", "First Place", "Second Place", "Third Place"][team.rank] }}</p>
+  </article>
+  {% endfor %}
+</section>
+
+<hr class="section-rule" />
+
+<p class="section-label">Level Progress</p>
+<section class="progress-panel" aria-label="Teams crossing each level">
+  <div class="progress-heading">
+    <span>Level</span>
+    <span>Teams Crossed</span>
+  </div>
+
+  <div class="level-chart">
+    {% set total_teams = summary.total_teams if summary.total_teams else (summary.level_progress | map(attribute='teams_crossed') | max) %}
+    {% for item in summary.level_progress %}
+      {% set width = (item.teams_crossed / total_teams) * 100 if total_teams else 3 %}
+      <div class="level-row">
+        <div class="level-label">Level {{ item.level }}</div>
+        <div class="level-bar-wrap">
+          <div class="level-bar" style="width: {{ width if width > 3 else 3 }}%;"></div>
+        </div>
+        <div class="level-count">{{ item.teams_crossed }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

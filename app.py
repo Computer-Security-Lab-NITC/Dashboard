@@ -24,6 +24,13 @@ announcements = [
         "body": "Due to slots being full, we have decided to close the registration form earlier than the deadline. Thank you for your interest.",
         "tag": "info",
         "timestamp": "10-04-2026 12:00"
+    },
+    {
+        "id": 3,
+        "title": "Winners Announced!",
+        "body": "Congratulations to all the winners of Nullpointer 2026! Check out the winners page for details. We will share the prize distribution date soon.",
+        "tag": "info",
+        "timestamp": "26-04-2026 18:00"
     }
 ]
 
@@ -56,49 +63,47 @@ tools = [
         "description": "Tool for hiding and extracting data inside images and audio files using steganography.",
         "category": "Forensics"
     }
-    # {
-    #     "id": 1,
-    #     "name": "CyberChef",
-    #     "url": "https://gchq.github.io/CyberChef/",
-    #     "description": "The Cyber Swiss Army Knife. Encode, decode, encrypt, and analyze data in-browser.",
-    #     "category": "Misc"
-    # },
-    # {
-    #     "id": 2,
-    #     "name": "GTFOBins",
-    #     "url": "https://gtfobins.github.io/",
-    #     "description": "Curated list of Unix binaries that can be used to bypass local security restrictions.",
-    #     "category": "Privilege Escalation"
-    # },
-    # {
-    #     "id": 3,
-    #     "name": "Burp Suite",
-    #     "url": "https://portswigger.net/burp",
-    #     "description": "Industry-standard web application security testing platform.",
-    #     "category": "Web"
-    # },
-    # {
-    #     "id": 5,
-    #     "name": "pwntools",
-    #     "url": "https://github.com/Gallopsled/pwntools",
-    #     "description": "CTF framework and exploit development library for Python.",
-    #     "category": "Pwn"
-    # },
-    # {
-    #     "id": 7,
-    #     "name": "John the Ripper",
-    #     "url": "https://www.openwall.com/john/",
-    #     "description": "Fast password cracker supporting many hash types and attack modes.",
-    #     "category": "Crypto"
-    # },
-    # {
-    #     "id": 8,
-    #     "name": "Volatility",
-    #     "url": "https://volatilityfoundation.org/",
-    #     "description": "Advanced memory forensics framework for analyzing RAM dumps.",
-    #     "category": "Forensics"
-    # }
 ]
+
+
+def get_initials(name: str) -> str:
+    return "".join([word[0].upper() for word in name.split() if word][:2])
+
+
+winners_summary = {
+    "total_teams": 12,
+    "levels_tracked": 5,
+    "winners": [
+        {
+            "rank": 2,
+            "team_name": "DedSec",
+            "photo_url": "",
+            "prize": "Silver bracket",
+        },
+        {
+            "rank": 1,
+            "team_name": "CyberNeragallu",
+            "photo_url": "",
+            "prize": "Gold bracket",
+        },
+        {
+            "rank": 3,
+            "team_name": "Error404",
+            "photo_url": "",
+            "prize": "Bronze bracket",
+        },
+    ],
+    "level_progress": [
+        {"level": 0, "teams_crossed": 11},
+        {"level": 1, "teams_crossed": 11},
+        {"level": 2, "teams_crossed": 11},
+        {"level": 3, "teams_crossed": 8},
+        {"level": 4, "teams_crossed": 3},
+    ],
+}
+
+for team in winners_summary["winners"]:
+    team["initials"] = get_initials(team["team_name"])
 
 
 @app.route("/")
@@ -118,6 +123,12 @@ def announcement_page():
 def tools_page():
     categories = sorted(set(t["category"] for t in tools))
     return render_template("tools.html", tools=tools, categories=categories)
+
+
+@app.route("/winners")
+def winners_page():
+    sorted_winners = sorted(winners_summary["winners"], key=lambda w: w["rank"])
+    return render_template("winners.html", summary={**winners_summary, "winners": sorted_winners})
 
 
 if __name__ == "__main__":
