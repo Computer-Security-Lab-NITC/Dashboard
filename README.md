@@ -1,20 +1,25 @@
 # NullPointer CTF Dashboard Frontend
 
-React + TypeScript frontend for the NullPointer CTF dashboard. The Flask app has been removed from this repo; the UI now expects a backend API and includes local fallback data so frontend development can continue before the backend is ready.
+React + TypeScript frontend for the NullPointer CTF dashboard. The frontend expects a Strapi backend API and includes local fallback data so UI development can continue before the backend is ready.
 
 ## API Contract
 
-Set `VITE_API_BASE_URL` in `.env` to point at the backend. If it is omitted, requests are made relative to the same origin.
+Set `VITE_API_BASE_URL` in `.env` to point at the backend. If omitted, requests are made relative to the same origin.
 
-Expected endpoints:
+Default local backend URL:
 
-- `GET /api/current-year`
-- `GET /api/:year/config`
-- `GET /api/announcements`
-- `GET /api/:year/tools`
-- `GET /api/:year/winners`
-- `GET /api/archives/years`
-- `GET /api/archives/:year`
+- `http://localhost:1337`
+
+Expected GET endpoints:
+
+- `GET /api/config`
+- `GET /api/announcements?sort=timestamp:desc`
+- `GET /api/tools?sort=category:asc`
+- `GET /api/years?filters[curr_year][$eq]=true&populate=teams,levels`
+- `GET /api/years?sort=year:desc&fields[0]=year`
+- `GET /api/years?filters[year][$eq]=<year>&populate=teams,levels,conducted_by,photos`
+
+The frontend does not currently use authenticated requests for public GET data.
 
 Example responses:
 
@@ -167,7 +172,7 @@ npm install
 cp .env.example .env
 ```
 
-Update `.env` if your backend runs somewhere other than `http://localhost:4000`.
+Update `.env` if your backend runs somewhere other than `http://localhost:1337`.
 
 ## Development
 

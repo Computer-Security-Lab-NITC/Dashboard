@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 
-const registrationDeadline = new Date(2026, 3, 10, 23, 59, 59).getTime();
+interface CountdownProps {
+  deadline: string;
+}
 
-function getRemaining() {
-  const diff = Math.max(registrationDeadline - Date.now(), 0);
+function parseDeadline(deadline: string) {
+  const time = Date.parse(deadline);
+  return Number.isNaN(time) ? 0 : time;
+}
+
+function getRemaining(deadline: number) {
+  const diff = deadline > 0 ? Math.max(deadline - Date.now(), 0) : 0;
   const total = Math.floor(diff / 1000);
 
   return {
-    expired: diff <= 0,
+    expired: deadline <= 0 || diff <= 0,
     days: Math.floor(total / 86400),
     hours: Math.floor(total / 3600) % 24,
     minutes: Math.floor(total / 60) % 60,
@@ -19,16 +26,21 @@ function pad(value: number) {
   return String(value).padStart(2, "0");
 }
 
-export function Countdown() {
-  const [remaining, setRemaining] = useState(getRemaining);
+export function Countdown({ deadline }: CountdownProps) {
+  const deadlineMs = parseDeadline(deadline);
+  const [remaining, setRemaining] = useState(() => getRemaining(deadlineMs));
 
   useEffect(() => {
+    if (deadlineMs <= 0) {
+      return undefined;
+    }
+
     const interval = window.setInterval(() => {
-      setRemaining(getRemaining());
+      setRemaining(getRemaining(deadlineMs));
     }, 1000);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [deadlineMs]);
 
   const values = [
     { label: "days", value: pad(remaining.days) },

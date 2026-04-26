@@ -1,8 +1,26 @@
-import type { Announcement, AppConfig, ArchiveEvent, Tool, WinnersSummary } from "./types";
+import type { Announcement, AppConfig, ArchiveEvent, CurrentYearResponse, Tool, WinnersSummary, YearDetail, YearInfo } from "./types";
 
 export const fallbackConfig: AppConfig = {
   registrationOpen: false,
   googleFormUrl: "#",
+};
+
+export const fallbackCurrentYear: YearInfo = {
+  id: 0,
+  year: 0,
+  title: "default deafault",
+  date: "default deafault",
+  venue: "default deafault",
+  totalTeams: 0,
+};
+
+export const fallbackCurrentYearDetail: YearDetail = {
+  id: 0,
+  year: 0,
+  desc: "default deafault",
+  regDeadline: "default deafault",
+  eventStartTime: "default deafault",
+  eventEndTime: "default deafault",
 };
 
 export const fallbackAnnouncements: Announcement[] = [

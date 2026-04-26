@@ -9,8 +9,29 @@ export interface CurrentYearResponse {
   year: number;
 }
 
+export interface YearInfo {
+  id: string | number;
+  documentId?: string;
+  year: number;
+  title: string;
+  date: string;
+  venue?: string;
+  totalTeams?: number;
+}
+
+export interface YearDetail {
+  id: string | number;
+  documentId?: string;
+  year: number;
+  desc: string;
+  regDeadline: string;
+  eventStartTime: string;
+  eventEndTime: string;
+}
+
 export interface Announcement {
-  id: number;
+  id: string | number;
+  documentId?: string;
   title: string;
   body: string;
   tag: AnnouncementTag;
@@ -18,7 +39,8 @@ export interface Announcement {
 }
 
 export interface Tool {
-  id: number;
+  id: string | number;
+  documentId?: string;
   name: string;
   url: string;
   description: string;

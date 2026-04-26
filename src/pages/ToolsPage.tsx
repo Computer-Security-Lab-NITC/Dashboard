@@ -18,9 +18,10 @@ function getDisplayUrl(url: string) {
 export function ToolsPage() {
   const [tools, setTools] = useState<Tool[]>(fallbackTools);
   const [activeCategory, setActiveCategory] = useState(allCategories);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
-    getTools().then(setTools);
+    getTools(() => setUsingFallback(true)).then(setTools);
   }, []);
 
   const categories = useMemo(
@@ -35,6 +36,11 @@ export function ToolsPage() {
   return (
     <>
       <PageHeader title="TOOLS" subtitle="Recommended resources & utilities" />
+      {usingFallback && (
+        <div className="fallback-banner">
+          default deafault — backend GET failed, showing fallback data.
+        </div>
+      )}
 
       <div className="filter-bar" aria-label="Filter tools by category">
         <button

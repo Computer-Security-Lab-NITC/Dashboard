@@ -544,6 +544,17 @@ a:hover {
   padding: 2rem;
 }
 
+.fallback-banner {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--warn);
+  border-radius: 6px;
+  background: rgba(255, 204, 0, 0.08);
+  color: var(--warn);
+  font-family: var(--mono);
+  font-size: 0.95rem;
+}
+
 .reg-banner.closed {
   border-color: var(--danger);
   box-shadow: 0 0 32px rgba(255, 68, 85, 0.06);

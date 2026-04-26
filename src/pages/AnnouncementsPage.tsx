@@ -6,9 +6,10 @@ import type { Announcement } from "../services/types";
 
 export function AnnouncementsPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>(fallbackAnnouncements);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
-    getAnnouncements().then((items) => {
+    getAnnouncements(() => setUsingFallback(true)).then((items) => {
       setAnnouncements([...items].sort((a, b) => b.timestamp.localeCompare(a.timestamp)));
     });
   }, []);
@@ -16,6 +17,11 @@ export function AnnouncementsPage() {
   return (
     <>
       <PageHeader title="UPDATES" subtitle="Live announcements & competition notices" />
+      {usingFallback && (
+        <div className="fallback-banner">
+          default deafault — backend GET failed, showing fallback data.
+        </div>
+      )}
       <div className="ann-list">
         {announcements.length > 0 ? (
           announcements.map((announcement, index) => (

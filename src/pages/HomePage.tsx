@@ -3,38 +3,58 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Countdown } from "../components/Countdown";
-import { getConfig } from "../services/api";
-import { fallbackConfig } from "../services/fallbackData";
-import type { AppConfig } from "../services/types";
+import { getConfig, getCurrentYearWithDetails } from "../services/api";
+import { fallbackConfig, fallbackCurrentYear, fallbackCurrentYearDetail } from "../services/fallbackData";
+import type { AppConfig, YearDetail, YearInfo } from "../services/types";
 
 export function HomePage() {
   const [config, setConfig] = useState<AppConfig>(fallbackConfig);
+  const [yearInfo, setYearInfo] = useState<YearInfo>(fallbackCurrentYear);
+  const [yearDetail, setYearDetail] = useState<YearDetail>(fallbackCurrentYearDetail);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
-    getConfig().then(setConfig);
+    getConfig(() => setUsingFallback(true)).then(setConfig);
+
+    getCurrentYearWithDetails(() => setUsingFallback(true)).then(({ yearInfo, yearDetail }) => {
+      console.log("[HomePage] server yearInfo", yearInfo);
+      console.log("[HomePage] server yearDetail", yearDetail);
+      setYearInfo(yearInfo);
+      setYearDetail(yearDetail);
+    });
   }, []);
+
+  const deadlineTimestamp = Date.parse(yearDetail.regDeadline);
+  const deadlineExpired = !Number.isNaN(deadlineTimestamp) && deadlineTimestamp <= Date.now();
+  const registrationOpen = config.registrationOpen && !deadlineExpired && !Number.isNaN(deadlineTimestamp);
 
   return (
     <>
+      {usingFallback && (
+        <div className="fallback-banner">
+          default deafault — backend GET failed, showing fallback data.
+        </div>
+      )}
       <section className="hero">
         <p className="hero-pre">
           <span>$</span> cat event_info.txt
         </p>
         <h1 className="hero-title">
-          <span className="accent" data-text="NullPointer">
-            NullPointer
-          </span>{" "}
-          CTF 2026
+          <span className="accent" data-text={yearInfo.title}>
+            {yearInfo.title}
+          </span>
         </h1>
         <p className="hero-tagline">// Break it. Trace it. Learn it.</p>
         <p className="hero-desc">
-          An open internet Capture The Flag competition designed for curious minds at every skill
-          level. Whether you are new to cybersecurity or already exploring CTFs, this event is built
-          to help you learn, solve, and compete. Challenges may cover web exploitation, reverse
-          engineering, cryptography, forensics, and binary exploitation.
+          {yearDetail.desc !== "default deafault"
+            ? yearDetail.desc
+            : "default desc"}
         </p>
         <p className="hero-conducted">
           Conducted by <span>CSED - NITC</span>
+        </p>
+        <p className="hero-venue">
+          Venue: <span>{yearInfo.venue}</span>
         </p>
         <div className="hero-actions">
           {config.registrationOpen ? (
@@ -57,13 +77,36 @@ export function HomePage() {
 
       <p className="section-label">Important Dates</p>
       <div className="dates-grid">
-        <DateCard className="card-reg" label="Registration Deadline" value="10/04/2026" sub="Closes at 11:59 PM. Slots are limited." />
-        <DateCard className="card-event" label="Competition Date" value="16/04/2026" sub="Single-day event. In-person at SSL labs." />
-        <DateCard className="card-time" label="Competition Timing" value="6:00 PM - 10:00 PM" sub="4-hour window. All challenges unlock at 6 PM sharp." />
+        <DateCard
+          className="card-reg"
+          label="Registration Deadline"
+          value={formatDate(yearDetail.regDeadline)}
+          sub={
+            yearDetail.regDeadline !== "default deafault"
+              ? `Deadline timestamp: ${formatTime(yearDetail.regDeadline)}`
+              : "Slots are limited."
+          }
+        />
+        <DateCard
+          className="card-event"
+          label="Competition Date"
+          value={formatDate(yearInfo.date)}
+          sub={
+            yearInfo.venue !== "default deafault"
+              ? `Venue: ${yearInfo.venue}`
+              : "Single-day event. Venue information will appear here once loaded."
+          }
+        />
+        <DateCard
+          className="card-time"
+          label="Competition Timing"
+          value={`${yearDetail.eventStartTime} - ${yearDetail.eventEndTime}`}
+          sub="Official contest window."
+        />
       </div>
 
-      {config.registrationOpen ? (
-        <Countdown />
+      {registrationOpen ? (
+        <Countdown deadline={yearDetail.regDeadline} />
       ) : (
         <div className="countdown-wrap">
           <div className="countdown-label">Registration Status</div>
@@ -157,6 +200,31 @@ function DateCard({ className, label, value, sub }: { className: string; label: 
       <div className="date-card-sub">{sub}</div>
     </div>
   );
+}
+
+function formatDate(timestamp: string) {
+  const date = new Date(timestamp);
+  if (isNaN(date.getTime())) {
+    return timestamp;
+  }
+
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function formatTime(timestamp: string) {
+  const date = new Date(timestamp);
+  if (isNaN(date.getTime())) {
+    return timestamp;
+  }
+
+  return date.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function InfoCard({ title, children }: { title: string; children: ReactNode }) {

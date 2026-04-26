@@ -13,9 +13,10 @@ const rankLabels: Record<WinningTeam["rank"], string> = {
 
 export function WinnersPage() {
   const [summary, setSummary] = useState<WinnersSummary>(fallbackWinnersSummary);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
-    getWinnersSummary().then(setSummary);
+    getWinnersSummary(() => setUsingFallback(true)).then(setSummary);
   }, []);
 
   const maxTeamsCrossed = useMemo(
@@ -26,6 +27,11 @@ export function WinnersPage() {
   return (
     <>
       <PageHeader title="WINNERS" subtitle="Final standings & level progression" />
+      {usingFallback && (
+        <div className="fallback-banner">
+          default deafault — backend GET failed, showing fallback data.
+        </div>
+      )}
 
       <section className="winners-overview" aria-label="Competition summary">
         <div className="stat-panel">

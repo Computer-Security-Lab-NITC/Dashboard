@@ -13,9 +13,10 @@ export function ArchivesPage() {
   );
   const [selectedYear, setSelectedYear] = useState(fallbackArchives[0]?.year ?? new Date().getFullYear() - 1);
   const [isYearPickerOpen, setIsYearPickerOpen] = useState(false);
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
-    getArchiveYears().then((years) => {
+    getArchiveYears(() => setUsingFallback(true)).then((years) => {
       const sortedYears = [...years].sort((a, b) => b - a);
 
       setArchiveYears(sortedYears);
@@ -32,7 +33,7 @@ export function ArchivesPage() {
       return;
     }
 
-    getArchiveByYear(selectedYear).then((archive) => {
+    getArchiveByYear(selectedYear, () => setUsingFallback(true)).then((archive) => {
       setArchiveByYear((current) => ({
         ...current,
         [archive.year]: archive,
@@ -52,6 +53,11 @@ export function ArchivesPage() {
   return (
     <>
       <PageHeader title="ARCHIVES" subtitle="Previous editions, winners & memories" />
+      {usingFallback && (
+        <div className="fallback-banner">
+          default deafault — backend GET failed, showing fallback data.
+        </div>
+      )}
 
       <div className="archive-control">
         <span className="archive-control-label">Select Edition</span>
