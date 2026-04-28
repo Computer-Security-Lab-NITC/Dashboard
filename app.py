@@ -30,7 +30,7 @@ announcements = [
         "title": "Winners Announced!",
         "body": "Congratulations to all the winners of Nullpointer 2026! Check out the winners page for details. We will share the prize distribution date soon.",
         "tag": "info",
-        "timestamp": "26-04-2026 18:00"
+        "timestamp": "29-04-2026 18:00"
     }
 ]
 
@@ -77,19 +77,19 @@ winners_summary = {
         {
             "rank": 2,
             "team_name": "DedSec",
-            "photo_url": "",
+            "members": ["Joshua Jacob Thomas", "Siddharth Madhavan"],
             "prize": "Silver bracket",
         },
         {
             "rank": 1,
             "team_name": "CyberNeragallu",
-            "photo_url": "",
+            "members": ["K Pratheek", "Karanam Udaykiran"],
             "prize": "Gold bracket",
         },
         {
             "rank": 3,
             "team_name": "Error404",
-            "photo_url": "",
+            "members": ["Muhammed Hanin", "Rahul R"],
             "prize": "Bronze bracket",
         },
     ],
@@ -101,9 +101,6 @@ winners_summary = {
         {"level": 4, "teams_crossed": 3},
     ],
 }
-
-for team in winners_summary["winners"]:
-    team["initials"] = get_initials(team["team_name"])
 
 
 @app.route("/")
