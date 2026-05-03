@@ -102,6 +102,89 @@ winners_summary = {
     ],
 }
 
+archives = [
+    {
+        "year": 2026,
+        "title": "NullPointer CTF 2026",
+        "date": "16-04-2026",
+        "venue": "NIT Calicut - SSL Lab",
+        "total_teams": 12,
+        "conducted_by": [
+            {
+                "name": "Dr. Vinod Pathari",
+                "type": "faculty",
+            },
+            {
+                "name": "Dr. Hiran V Nath",
+                "type": "faculty",
+            },
+            {
+                "name": "Nandana Anand",
+                "type": "student",
+            },
+            {
+                "name": "Vaishnavi R Pai",
+                "type": "student",
+            },
+            {
+                "name": "Naila Fathima",
+                "type": "student",
+            },
+            {
+                "name": "Anupama Mary Joseph",
+                "type": "student",
+            },
+        ],
+        "description": "NullPointer CTF 2026 was a tightly run four-hour contest at SSL Lab, NIT Calicut, with all 12 registered teams in attendance.",
+        "winners": [
+            {
+                "rank": 1,
+                "team_name": "CyberNeragallu",
+                "members": ["K Pratheek", "Karanam Udaykiran"],
+                "prize": "Gold bracket",
+            },
+            {
+                "rank": 2,
+                "team_name": "DedSec",
+                "members": ["Joshua Jacob Thomas", "Siddharth Madhavan"],
+                "prize": "Silver bracket",
+            },
+            {
+                "rank": 3,
+                "team_name": "Error404",
+                "members": ["Muhammed Hanin", "Rahul R"],
+                "prize": "Bronze bracket",
+            },
+        ],
+        "level_progress": [
+            {"level": 0, "teams_crossed": 11},
+            {"level": 1, "teams_crossed": 11},
+            {"level": 2, "teams_crossed": 11},
+            {"level": 3, "teams_crossed": 8},
+            {"level": 4, "teams_crossed": 3},
+        ],
+        "highlights": [
+            "All 12 teams arrived and competed across the full four-hour schedule.",
+            "The contest concluded successfully with a group photo session.",
+            "Final rankings were determined from team-submitted process explanations and finishing order.",
+        ],
+        "photos": [
+            {
+                "id": "group",
+                "path": "2026/group.jpeg",
+                "alt": "CTF team group photo",
+                "caption": "Group photo at the end of NullPointer CTF 2026.",
+            },
+            {
+                "id": "lab",
+                "path": "2026/lab.jpeg",
+                "alt": "CTF lab setup",
+                "caption": "Challenge lab setup during the event.",
+            },
+        ],
+    },
+]
+
 
 @app.route("/")
 def index():
@@ -126,6 +209,11 @@ def tools_page():
 def winners_page():
     sorted_winners = sorted(winners_summary["winners"], key=lambda w: w["rank"])
     return render_template("winners.html", summary={**winners_summary, "winners": sorted_winners})
+
+
+@app.route("/archives")
+def archives_page():
+    return render_template("archives.html", archives=archives)
 
 
 if __name__ == "__main__":

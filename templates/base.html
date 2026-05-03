@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{% block title %}CTF Dashboard{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='ctf.jpg') }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -52,11 +53,23 @@
     }
 
     .nav-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
       font-family: var(--mono);
       font-size: 1.2rem;
       color: var(--accent);
       letter-spacing: 2px;
       text-decoration: none;
+    }
+
+    .nav-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
     }
 
     .nav-toggle {
@@ -259,7 +272,10 @@
 <body>
 
 <nav>
-  <a class="nav-brand" href="/">CTF_DASHBOARD</a>
+  <a class="nav-brand" href="/">
+    <img class="nav-logo" src="{{ url_for('static', filename='ctf.jpg') }}" alt="CTF logo" />
+    CTF_DASHBOARD
+  </a>
 
   <div class="nav-toggle" onclick="toggleNav()">☰</div>
 
@@ -268,6 +284,7 @@
     <a href="/announcement" class="{{ 'active' if request.endpoint == 'announcement_page' else '' }}">UPDATES</a>
     <a href="/tools" class="{{ 'active' if request.endpoint == 'tools_page' else '' }}">TOOLS</a>
     <a href="/winners" class="{{ 'active' if request.endpoint == 'winners_page' else '' }}">WINNERS</a>
+    <a href="/archives" class="{{ 'active' if request.endpoint == 'archives_page' else '' }}">ARCHIVES</a>
   </div>
 </nav>
 
